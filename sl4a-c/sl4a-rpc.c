@@ -49,7 +49,7 @@ json_t* sl4a_rpc(int socket_fd, char *method, json_t *params) {
     response_alloc += 100;
     response = realloc(response, response_alloc);
     
-    int result = read(socket_fd, response + response_len, 100);
+    int result = read(socket_fd, response + response_len, 99);
 
     if (result == -1) {
       perror("reading response from SL4A server");
@@ -57,13 +57,14 @@ json_t* sl4a_rpc(int socket_fd, char *method, json_t *params) {
       response_len += result;
     }
 
-    if (response_len < 100) break;
+    if (result < 100) break;
   }
+  response[response_len] = 0;
 
   printf("Parsing response: '%s'\n", response);
   json_error_t response_error;
   json_t* response_object = json_loads(response, &response_error);
-  free(response);
+  //free(response);
 
   if (response_object == NULL) {
     printf("json decode error on line %d: '%s'\n",
@@ -142,8 +143,11 @@ void sl4a_rpc_method(int socket_fd,
       // actually, at the moment, you could append any type of json_t object
       // TODO: type checking to make sure they gave us what they said they
       // would, and error handling to report it
-      json_t* arg = va_arg(args, double);
+      json_t* arg = va_arg(args, json_t*);
       json_array_append(params, arg);
+
+    } else if (*arg_types == 'v') {
+      // void.  do nothing.
 
     } else {
       // error

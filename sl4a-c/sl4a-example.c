@@ -34,7 +34,7 @@ main(int argc, char **argv) {
   // canceled when the user clicks on it.
   //
   // Find the corresponding call in sl4a-wrapper.h and call it!
-  void sl4a_notify(socket_fd, "window title", "notification text");
+  sl4a_notify(socket_fd, "window title", "notification text");
 
   // Here's the low-level way to call SL4A rpc.  If you don't get the
   // types right, the sl4a server will send back an error, and if you
@@ -65,7 +65,7 @@ main(int argc, char **argv) {
   sl4a_rpc_method(socket_fd, "contactsGetCount", 'i', &number_of_contacts, "");
 
   // Corresponding high level call:
-  number_of_contacts = sl4a_contactsGetCount();
+  number_of_contacts = sl4a_contactsGetCount(socket_fd);
 
   printf("You have %d contacts.\n", number_of_contacts);
 }

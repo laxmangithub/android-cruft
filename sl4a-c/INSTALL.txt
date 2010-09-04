@@ -1,0 +1,115 @@
+To use the SL4A C-language interface, you'll need an android phone running
+SL4A.
+
+You can compile this code either as a native Android binary that you can copy
+to a rooted phone and run on the phone.
+
+Or you can compile it as a program that runs on your host computer and 
+accesses the SL4A API over the network.
+
+===================
+  INSTALL SL4A:
+===================
+
+Install SL4A on your phone:
+http://code.google.com/p/android-scripting/
+
+Install the android-sdk on your host computer:
+http://developer.android.com/sdk/index.html
+
+Make sure you can "adb shell" into your phone.  This often requires:
+
+  - Connecting your phone to your computer with a USB cable
+
+  - Making sure you phone is set to allow USB debugging 
+    (Settings->Applications->Development->USB debugging)
+
+  $ cd android-sdk/tools
+  $ ./adb kill-server
+  $ sudo ./adb start-server
+  $ ./adb shell
+
+Run SL4A on your phone and start a private server:
+  Run SL4A
+  menu->View->Interpreters->menu->Start Server->Private
+  Pull down the notification bar and tap "SL4A Service"
+  Note the port it's listening on.  Eg: "localhost:34832" means
+  it's listening on 34832
+
+
+===================
+  Running C programs on your computer that access SL4A on a phone:
+===================
+
+1. Make sure you can run "remote control" apps on your host that use the
+SL4A API.
+
+  Set up port forwarding from your host's port 9999 to the SL4A port on the
+  phone (34832 in the earlier example):
+    $ # on your host computer
+    $ # PORT WILL BE DIFFERENT EACH TIME YOU RUN SL4A
+    $ ./adb forward tcp:9999 tcp:34832  
+  
+  See http://code.google.com/p/android-scripting/wiki/RemoteControl for more
+  details.
+  
+2. Compile the code:
+
+  Make sure you have libjansson installed.  For my ubuntu linux machine, that's
+  simply:
+  $ sudo apt-get install libjansson0-dev
+
+  Compile:
+  $ make
+
+3. Try it!
+
+  $ ./sl4a-example-host 9999
+
+If it works, you'll get several notifications in your notification bar, and
+a statement of how many contacts you have in your address book.
+
+
+===================
+  Compiling native Android C programs that access the SL4A API:
+===================
+
+1. Install the ndk: http://developer.android.com/sdk/ndk/index.html
+
+2. Put agcc.pl and arm-eabi-gcc in your PATH.  agcc.pl can be found in
+   the subversion repository along with this code.  arm-eabi-gcc is in:
+
+  android-ndk-r4b/build/prebuilt/linux-x86/arm-eabi-4.4.0/bin 
+
+3. Download libjansson and compile for Android:
+  http://www.digip.org/jansson/
+
+  Unpack and create an arm-eabi directory under jansson-1.3/
+
+  Configure:
+
+  $ LD=arm-eabi-ld  CC=agcc.pl ./configure --host=arm-eabi --prefix=/path/to/jansson-1.3/arm-eabi
+
+  Build:
+
+  $ make
+
+  Install to the arm-eabi directory you created:
+
+  $ make install
+
+4. Open up the Makefile in this directory.  Comment out the lines setting up
+  local compilation, and uncomment the lines pointing at agcc.pl and your
+  jansson installation.
+
+5. Run make in this directory.
+
+6. If it works, you'll end up with ./sl4a-example-arm
+
+7. $ adb push sl4a-example-arm /data # requires a rooted phone
+
+8. adb shell into your phone, then:
+  # cd /data
+  # ./sl4a-example-arm
+
+
