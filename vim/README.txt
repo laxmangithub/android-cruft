@@ -1,3 +1,7 @@
+THE TARBALLS IN THIS DIRECTORY HAVE MOVED
+  See the downloads page instead:
+  http://code.google.com/p/android-cruft/downloads/list
+
 vim-7.3-android-binary.tar.gz:
   The vim binary and the runtime/ directory.  Unpack this in /data on your
   rooted phone and export VIMRUNTIME=/data/vim/runtime, then run /data/vim/vim.
