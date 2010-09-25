@@ -1,3 +1,7 @@
+UPDATE: check out ../sl4a-c to see what this evolved into.
+
+====
+
 Here's sample C code and compiled binaries for linux and android that allow
 a C program to run SL4A API calls:
 http://credentiality2.blogspot.com/2010/08/giving-native-android-c-apps-access-to.html
