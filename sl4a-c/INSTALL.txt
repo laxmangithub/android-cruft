@@ -1,11 +1,13 @@
 To use the SL4A C-language interface, you'll need an android phone running
 SL4A.
 
-You can compile this code either as a native Android binary that you can copy
-to a rooted phone and run on the phone.
+You can compile this code either as:
 
-Or you can compile it as a program that runs on your host computer and 
-accesses the SL4A API over the network.
+1. A native Android binary that you can copy to a rooted phone and run on
+the phone.
+
+2. A program that runs on your host computer and accesses the SL4A API
+over the network.
 
 ===================
   INSTALL SL4A:
@@ -81,9 +83,10 @@ a statement of how many contacts you have in your address book.
 
   android-ndk-r4b/build/prebuilt/linux-x86/arm-eabi-4.4.0/bin 
 
-3. Download libjansson and compile for Android:
+3. Download libjansson:
   http://www.digip.org/jansson/
 
+  And compile for Android:
   Unpack and create an arm-eabi directory under jansson-1.3/
 
   Configure:
