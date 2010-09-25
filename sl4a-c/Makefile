@@ -2,6 +2,7 @@
 # Compile a binary to run on the host computer and access the SL4A
 # server over the network
 #CC=gcc
+#AR=ar
 #LIBS=-ljansson
 #SUFFIX=host
 
@@ -18,13 +19,25 @@ JANSSON=../../../dl/jansson-1.3/arm-eabi
 # behave like a normal GCC cross-compiler.  Make sure it's in your path,
 # along with arm-eabi-gcc.
 CC=agcc.pl
+AR=arm-eabi-ar
 CFLAGS=-I$(JANSSON)/include
 LIBS=-ljansson -L$(JANSSON)/lib
 SUFFIX=arm
 
-sl4a-example: sl4a-example.c sl4a-rpc.c sl4a-wrapper.c \
+all: sl4a-example libsl4a.a
+
+sl4a-example: sl4a-example.c sl4a-rpc.o sl4a-wrapper.o \
               sl4a-rpc.h sl4a-wrapper.h
-	$(CC) $(CFLAGS) -o sl4a-example-$(SUFFIX) sl4a-example.c sl4a-rpc.c sl4a-wrapper.c $(LIBS)
+	$(CC) $(CFLAGS) -o sl4a-example-$(SUFFIX) sl4a-example.c sl4a-rpc.o sl4a-wrapper.o $(LIBS)
+
+libsl4a.a: sl4a-rpc.o sl4a-wrapper.o
+	$(AR) rcs libsl4a.a sl4a-wrapper.o sl4a-rpc.o
+
+sl4a-rpc.o: sl4a-rpc.c sl4a-rpc.h
+	$(CC) $(CFLAGS) -c sl4a-rpc.c
+
+sl4a-wrapper.o: sl4a-wrapper.c sl4a-wrapper.h
+	$(CC) $(CFLAGS) -c sl4a-wrapper.c
 
 sl4a-rpc.c: api-calls.txt
 	./generate-api.pl api-calls.txt
