@@ -26,12 +26,11 @@ SUFFIX=arm
 
 all: sl4a-example libsl4a.a
 
-sl4a-example: sl4a-example.c sl4a-rpc.o sl4a-wrapper.o \
-              sl4a-rpc.h sl4a-wrapper.h
-	$(CC) $(CFLAGS) -o sl4a-example-$(SUFFIX) sl4a-example.c sl4a-rpc.o sl4a-wrapper.o $(LIBS)
-
 libsl4a.a: sl4a-rpc.o sl4a-wrapper.o
 	$(AR) rcs libsl4a.a sl4a-wrapper.o sl4a-rpc.o
+
+sl4a-example: sl4a-example.c libsl4a.a
+	$(CC) $(CFLAGS) -o sl4a-example-$(SUFFIX) sl4a-example.c -L. -lsl4a $(LIBS)
 
 sl4a-rpc.o: sl4a-rpc.c sl4a-rpc.h
 	$(CC) $(CFLAGS) -c sl4a-rpc.c
